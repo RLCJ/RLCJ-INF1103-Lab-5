@@ -16,5 +16,17 @@
         "name": "Ghost Pie",
         "price": "$15.00",
         "stock": 3172
+    },
+    {
+        "id": "8004",
+        "name": "Beetle Soup",
+        "price": "$5.00",
+        "stock": 456
+    },
+    {
+        "id": "8005",
+        "name": "The Flood",
+        "price": "$3.43",
+        "stock": 343
     }
 ]

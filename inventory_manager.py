@@ -4,14 +4,16 @@ import os
 default_inventory = [                                                           # created dictonary with several products
     {"id": "8001", "name": "Sweet Madame", "price": "$9.50", "stock": 1659},
     {"id": "8002", "name": "Lavender Melon", "price": "$8.00", "stock": 11},
-    {"id": "8003", "name": "Ghost Pie", "price": "$15.00", "stock": 3172}
+    {"id": "8003", "name": "Ghost Pie", "price": "$15.00", "stock": 3172},
+    {"id": "8004", "name": "Beetle Soup", "price": "$5.00", "stock": 456},
+    {"id": "8005", "name": "The Flood", "price": "$3.43", "stock": 343},
 ]
 
 FILE_NAME = "inventory.json"
 
 
-def load_inventory():
-    """Loads inventory from JSON file if present; otherwise creates default data."""
+def load_inventory():                               # loads inventory from JSON file if present; otherwise creates empty inventiry
+
     if os.path.exists(FILE_NAME):
         print(f"{FILE_NAME} found.")
         try:
@@ -34,8 +36,8 @@ def save_inventory(inventory):
         json.dump(inventory, file, indent=4)
 
 
-def display_all(inventory):
-    """Displays current inventory matching the exact sample layout."""
+def display_all(inventory):         # Read (crud)
+    
     print("Current Inventory")
     print("-" * 40)
     for prod in inventory:
@@ -43,23 +45,43 @@ def display_all(inventory):
     print("-" * 40)
 
 
-def add_product(inventory):
+def add_product(inventory):         # Create (crud)
     """Adds a new product to the inventory with auto-incremented ID (800x)."""
     # Auto-generate next ID based on highest current numeric ID
     max_id = max([int(prod["id"]) for prod in inventory], default=8000)
     new_id = str(max_id + 1)
 
-    name = input("Enter product name: ").strip()
-    try:
-        price = float(input("Enter product price: "))
-        stock = int(input("Enter initial stock: "))
-        inventory.append({"id": new_id, "name": name, "price": price, "stock": stock})
-        print(f"Product '{name}' added successfully with ID: {new_id}.\n")
-    except ValueError:
-        print("Invalid price or stock amount. Operation cancelled.\n")
+    while True:
+        name = input("Enter product name: ").strip()
+        if not name:
+            print("Error: Product name cannot be empty. Please try again.")
+        elif name.isdigit():
+            print("Error: Product name cannot be just numbers (e.g., '123'). Please enter a valid name.")
+        else:
+            break
+    while True:
+        price_input = input("Enter product price ($): ").strip()
+        try:
+            price = float(price_input)
+            if price <= 0:
+                print("Error: Price must be greater than $0.00. Please try again.")
+            else:
+                break
+        except ValueError:
+            print("Error: Invalid price. Please enter a valid decimal number (e.g., 9.99).")
+
+    while True:
+        stock_input = input("Enter initial stock: ").strip()
+        if stock_input.isdigit():
+            stock = int(stock_input)
+            break
+        print("Error: Invalid stock amount. Please enter a valid integer.")
+
+    inventory.append({"id": new_id, "name": name, "price": f"${price:.2f}", "stock": stock})
+    print(f"Product '{name}' added successfully with ID: {new_id}.\n")
 
 
-def update_stock(inventory):
+def update_stock(inventory):         # Update (crud)
     """Updates stock quantity for a target product ID."""
     prod_id = input("Enter product ID to update: ").strip()
     for prod in inventory:
@@ -90,14 +112,30 @@ def search_product(inventory):
         print("No matching product found.\n")
 
 
+def delete_product(inventory):      # Delete (crud)
+    prod_id = input("Enter Product ID to delete: ").strip()
+    
+    for i, prod in enumerate(inventory):
+        if prod["id"] == prod_id:
+            confirm = input(f"Are you sure you want to delete '{prod['name']}' (ID: {prod['id']})? (y/n): ").strip().lower()
+            if confirm == 'y':
+                deleted = inventory.pop(i)
+                print(f"Success: Product '{deleted['name']}' (ID: {deleted['id']}) has been deleted.\n")
+            else:
+                print("Operation cancelled.\n")
+            return
+
+    print("Product ID not found.\n")
+
 def print_menu():
     print("---------------- MENU ----------------")
     print("1. Display All Products")
     print("2. Add Product")
     print("3. Update Stock")
     print("4. Search Product")
-    print("5. Save Inventory")
-    print("6. Exit")
+    print("5. Delete Product")
+    print("6. Save Inventory")
+    print("7. Exit")
     print("--------------------------------------")
 
 
@@ -126,14 +164,18 @@ def main():
             print()
             search_product(inventory)
         elif choice == "5":
-            save_inventory(inventory)
-            print("Inventory saved to inventory.json.\n")
+            print()
+            delete_product(inventory)
         elif choice == "6":
             save_inventory(inventory)
-            print("Exiting system. Data saved. Goodbye!")
+            print("Inventory saved to inventory.json.\n")
+        elif choice == "7":
+            save_inventory(inventory)
+            print("Saving inventory before exit... \n Inventory saved successfully!")
+            print("Thank you for using the Inventory Management System")
             break
         else:
-            print("Invalid option. Please enter a number from 1 to 6.\n")
+            print("Invalid option. Please enter a number from 1 to 7.\n")
 
 
 if __name__ == "__main__":
