@@ -1,0 +1,26 @@
+[
+    {
+        "id": "8001",
+        "name": "Sweet Madame",
+        "price": "$9.50",
+        "stock": 1659
+    },
+    {
+        "id": "8002",
+        "name": "Lavender Melon",
+        "price": "$8.00",
+        "stock": 11
+    },
+    {
+        "id": "8003",
+        "name": "Ghost Pie",
+        "price": "$15.00",
+        "stock": 3172
+    },
+    {
+        "id": "8004",
+        "name": "1",
+        "price": 1.0,
+        "stock": 5
+    }
+]
