@@ -1,3 +1,0 @@
-Total Deliveries Processed: 10
-Number of Failed/Rejected Entries: 0
-Transaction History (1 entries): [10]
